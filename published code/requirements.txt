@@ -1,0 +1,5 @@
+mlx
+numpy
+pandas
+geopandas
+matplotlib
