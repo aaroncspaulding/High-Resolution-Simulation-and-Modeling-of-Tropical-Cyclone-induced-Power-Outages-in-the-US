@@ -1,0 +1,11 @@
+name: storm-outage-demo
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy=2.0.2
+  - pandas=2.3.3
+  - geopandas=1.0.1
+  - matplotlib=3.9.4
+  - pyarrow=21.0.0
+  - mlx=0.32.0
