@@ -1,7 +1,6 @@
 cff-version: 1.2.0
-message: 'If you use this software, please cite the associated Applied Energy article and this software record.'
+message: "If you use this software, please cite it as below."
 title: 'High-Resolution Simulation and Modeling of Tropical-Cyclone induced Power Outages in the United States'
-type: software
 authors:
   - family-names: 'Spaulding'
     given-names: 'Aaron'
