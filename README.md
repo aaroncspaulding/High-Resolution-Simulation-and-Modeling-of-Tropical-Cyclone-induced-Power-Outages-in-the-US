@@ -12,7 +12,7 @@
 ## Run Demo
 1. Create the conda environment: `conda env create -f 'published code/environment.yml'`
 2. Activate it: `conda activate storm-outage-demo`
-3. Prepare Data:
+3. Prepare Data
 4. Run Model: `python 'published code/storm_customers_affected_demo.py' --storm-id 2020279N16284`
 5. Outputs available in `published code/output/`
 
