@@ -1,3 +1,4 @@
 __pycache__/
 .DS_Store
 large_data_for_demo/
+data/_static_variables.feather

@@ -96,7 +96,7 @@ def load_storm_context(storm_id: str, *, static_path: Path, weather_data: Path, 
     if storm_meta is None:
         raise ValueError(f'Unknown storm_id: {storm_id}')
     agg = aggregate_storm_batch(loader.load_storm(storm_id), reorder_idx)
-    valid_positions = np.flatnonzero(agg.outage_mask_any)
+    valid_positions = np.flatnonzero(agg.storm_mask_any)
     tract_ids = np.searchsorted(tract_end_idx, valid_positions, side='right').astype(np.int32, copy=False)
     county_ids = np.searchsorted(county_end_idx, valid_positions, side='right').astype(np.int32, copy=False)
     county_coverage = np.bincount(county_ids, minlength=county_end_idx.shape[0]).astype(np.int32, copy=False)

@@ -38,8 +38,7 @@ class AggregatedStorm:
     storm_id: str
     storm_name: str
     weather: np.ndarray
-    outage_sum: np.ndarray
-    outage_mask_any: np.ndarray
+    storm_mask_any: np.ndarray
 
 def _to_utc_naive(ts: pd.Timestamp) -> pd.Timestamp:
     ts = pd.Timestamp(ts)
@@ -127,8 +126,9 @@ class TemporalStormLoader:
             gust = gust.astype(self.output_dtype)
             precip = precip.astype(self.output_dtype)
             outage = outage.astype(self.output_dtype)
-        if gust.shape[0] != self.cell_order.num_cells:
-            raise ValueError(f'Cell count mismatch: data has {gust.shape[0]}, expected {self.cell_order.num_cells}.')
+        expected_shape = (self.cell_order.num_cells, len(storm.stems))
+        if any(array.shape != expected_shape for array in (gust, precip, outage, mask)):
+            raise ValueError(f'Hourly data shape mismatch; expected {expected_shape}.')
         return StormBatch(storm_id=storm.storm_id, storm_name=storm.storm_name, gust_speed=gust, accumulated_precipitation=precip, outages=outage, storm_track_mask=mask)
 
 def build_temporal_loader(cell_order: TemporalCellOrder, storm_name: str | None='ISAIAS', storm_names: Optional[Sequence[str]]=None, storms_path: Path | str=DEFAULT_STORMS_PATH, weather_db_directory: Path | str=DEFAULT_WEATHER_DB, max_workers: Optional[int]=None, output_dtype=mx.float32) -> TemporalStormLoader:
@@ -139,15 +139,11 @@ def aggregate_storm_batch(storm_batch: StormBatch, reorder_idx: np.ndarray | mx.
     reorder_idx = mx.array(reorder_idx, dtype=mx.int32)
     gust = mx.take(storm_batch.gust_speed, reorder_idx, axis=0).astype(mx.float32)
     precip = mx.take(storm_batch.accumulated_precipitation, reorder_idx, axis=0).astype(mx.float32)
-    outage = mx.take(storm_batch.outages, reorder_idx, axis=0).astype(mx.float32)
     track_mask = mx.take(storm_batch.storm_track_mask, reorder_idx, axis=0).astype(mx.int8)
     valid_hour = track_mask == 0
-    outage_valid = valid_hour & (outage >= 0.0)
     zero = mx.array(0.0, dtype=mx.float32)
     neg = mx.array(-1000000000.0, dtype=mx.float32)
     valid_f = valid_hour.astype(mx.float32)
-    outage_sum = mx.sum(mx.where(outage_valid, outage, zero), axis=1)
-    outage_mask_any = mx.sum(outage_valid.astype(mx.float32), axis=1) > 0.0
     max_gust = mx.max(mx.where(valid_hour, gust, neg), axis=1)
     max_precip = mx.max(mx.where(valid_hour, precip, neg), axis=1)
     cs_precip = mx.cumsum(mx.where(valid_hour, precip, zero), axis=1)
@@ -158,5 +154,5 @@ def aggregate_storm_batch(storm_batch: StormBatch, reorder_idx: np.ndarray | mx.
     any_valid_hour = mx.sum(valid_f, axis=1) > 0.0
     any_valid_roll3 = mx.sum(roll3_valid.astype(mx.float32), axis=1) > 0.0
     weather = mx.stack([mx.where(any_valid_hour, max_gust, zero), mx.where(any_valid_hour, max_precip, zero), mx.where(any_valid_roll3, max_precip_3h, zero), mx.sum(((gust >= 20.0) & valid_hour).astype(mx.float32), axis=1), mx.sum(((gust >= 25.0) & valid_hour).astype(mx.float32), axis=1), mx.sum(((gust >= 30.0) & valid_hour).astype(mx.float32), axis=1)], axis=1)
-    mx.eval(outage_sum, outage_mask_any, weather)
-    return AggregatedStorm(storm_id=storm_batch.storm_id, storm_name=storm_batch.storm_name, weather=_as_numpy(weather, dtype=np.float32), outage_sum=_as_numpy(outage_sum, dtype=np.float32), outage_mask_any=_as_numpy(outage_mask_any, dtype=bool))
+    mx.eval(any_valid_hour, weather)
+    return AggregatedStorm(storm_id=storm_batch.storm_id, storm_name=storm_batch.storm_name, weather=_as_numpy(weather, dtype=np.float32), storm_mask_any=_as_numpy(any_valid_hour, dtype=bool))

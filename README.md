@@ -1,5 +1,10 @@
 # Published Code
 
+## Overview
+![Figure 1. Overview](images/Figure%201.png)
+
+
+
 ## Conda dependencies
 - Python 3.11, NumPy, pandas, GeoPandas, Matplotlib, PyArrow, and MLX 0.32.
 - MLX is installed from Conda Forge and supports Apple-silicon macOS and CPU execution on Linux. See the [MLX install guide](https://ml-explore.github.io/mlx/build/html/install.html) for Linux installation details.
@@ -16,4 +21,5 @@
 - The bundle contains processed `weather_data`, `eaglei_targets`, `storm_tracks`, and `county_polygons`.
 - Custom locations may be supplied with `--weather-data`, `--eaglei-dir`, `--storm-tracks`, `--county-file`, and `--static-data`.
 
-## Data Processing Overview
+## Original Datasets
+![Table 1. Original datasets](images/Table%201.png)
