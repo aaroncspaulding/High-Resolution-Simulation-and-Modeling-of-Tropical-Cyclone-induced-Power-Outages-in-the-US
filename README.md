@@ -1,4 +1,5 @@
 # Published Code
+[![DOI](https://zenodo.org/badge/1244694101.svg)](https://doi.org/10.5281/zenodo.21522705)
 
 ## Overview
 ![Figure 1. Overview](images/Figure%201.png)
