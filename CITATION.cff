@@ -1,15 +1,17 @@
 cff-version: 1.2.0
-title: "High-Resolution Simulation and Modeling of Tropical-Cyclone induced Power Outages in the United States"
-version: 1.0.0
-license: "MIT"
+message: 'If you use this software, please cite it as below.'
+title: 'High-Resolution Simulation and Modeling of Tropical-Cyclone-Induced Power Outages in the United States'
 type: software
-message: "If you use this software, please cite it as below."
 authors:
-  - given-names: Aaron
-    family-names: Spaulding
-    affiliation: Princeton University
-    orcid: "https://orcid.org/0000-0001-6404-705X"
-  - given-names: Ning
-    family-names: Lin
-    affiliation: Princeton University
-    orcid: "https://orcid.org/0000-0002-5571-1606"
+  - given-names: 'Aaron'
+    family-names: 'Spaulding'
+    affiliation: 'Princeton University'
+    orcid: 'https://orcid.org/0000-0001-6404-705X'
+  - given-names: 'Ning'
+    family-names: 'Lin'
+    affiliation: 'Princeton University'
+    orcid: 'https://orcid.org/0000-0002-5571-1606'
+version: '1.0.0'
+license: MIT
+repository-code: 'https://github.com/aaroncspaulding/High-Resolution-Simulation-and-Modeling-of-Tropical-Cyclone-induced-Power-Outages-in-the-US'
+date-released: '2026-07-23'
